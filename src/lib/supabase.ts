@@ -5,7 +5,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export type UserRole = 'customer' | 'barber_admin' | 'barber' | 'admin';
+export type UserRole = 'customer' | 'stylist_admin' | 'stylist' | 'admin' | 'owner';
 
 export interface Profile {
   id: string;

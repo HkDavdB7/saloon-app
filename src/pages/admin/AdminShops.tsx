@@ -23,7 +23,7 @@ interface Shop {
 
 interface SubscriptionRow {
   id: string;
-  barber_admin_id: string;
+  stylist_admin_id: string;
   package_id: string;
   status: 'trial' | 'active' | 'suspended' | 'expired';
   trial_ends_at: string | null;
@@ -62,7 +62,7 @@ const AdminShops = () => {
   const fetchSubscriptions = async () => {
     const { data } = await supabase
       .from('subscriptions')
-      .select('id, barber_admin_id, package_id, status, trial_ends_at');
+      .select('id, stylist_admin_id, package_id, status, trial_ends_at');
     if (data) setSubscriptions(data as SubscriptionRow[]);
   };
 
@@ -83,7 +83,7 @@ const AdminShops = () => {
   const packageMap = useMemo(() => Object.fromEntries(packages.map((p) => [p.id, p])), [packages]);
 
   const getSubscriptionForShop = (shop: Shop) =>
-    shop.owner_id ? subscriptions.find((s) => s.barber_admin_id === shop.owner_id) : undefined;
+    shop.owner_id ? subscriptions.find((s) => s.stylist_admin_id === shop.owner_id) : undefined;
 
   const filtered = shops.filter((s) =>
     s.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -163,7 +163,7 @@ const AdminShops = () => {
       const { error } = await supabase
         .from('subscriptions')
         .insert({
-          barber_admin_id: selectedShop.owner_id,
+          stylist_admin_id: selectedShop.owner_id,
           package_id: selectedPackageId,
           status: selectedStatus,
           trial_ends_at: trialEnd,

@@ -45,11 +45,11 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-/** Auto-link a barber row when the user logs in with a matching invite_email */
-const autoLinkBarber = async (userId: string, email: string) => {
+/** Auto-link a stylist row when the user logs in with a matching invite_email */
+const autoLinkStylist = async (userId: string, email: string) => {
   try {
     const { data } = await supabase
-      .from('barbers')
+      .from('stylists')
       .select('id')
       .eq('invite_email', email)
       .is('profile_id', null)
@@ -57,7 +57,7 @@ const autoLinkBarber = async (userId: string, email: string) => {
       .maybeSingle();
 
     if (data) {
-      await supabase.from('barbers').update({ profile_id: userId }).eq('id', data.id);
+      await supabase.from('stylists').update({ profile_id: userId }).eq('id', data.id);
     }
   } catch {
     // non-critical — silently ignore
@@ -89,9 +89,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     setProfile(data);
 
-    // Auto-link barber if applicable
-    if (data.role === 'barber' && userEmail) {
-      autoLinkBarber(userId, userEmail);
+    // Auto-link stylist if applicable
+    if (data.role === 'stylist' && userEmail) {
+      autoLinkStylist(userId, userEmail);
     }
   };
 

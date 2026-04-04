@@ -16,7 +16,7 @@ import { Check, X, Eye, RotateCcw, Loader2, Inbox } from 'lucide-react';
 
 interface PlatformRequest {
   id: string;
-  barber_admin_id: string;
+  stylist_admin_id: string;
   shop_name: string;
   contact_phone: string;
   city: string;
@@ -116,7 +116,7 @@ const AdminRequests = () => {
       trialEnd.setDate(trialEnd.getDate() + days);
 
       await supabase.from('subscriptions').insert({
-        barber_admin_id: req.barber_admin_id,
+        stylist_admin_id: req.stylist_admin_id,
         package_id: packageId,
         status: 'trial',
         trial_ends_at: trialEnd.toISOString(),

@@ -16,7 +16,7 @@ interface Booking {
   total_price: number | null;
   shops: { name: string } | null;
   profiles: { full_name: string | null; phone?: string | null } | null;
-  barbers: { full_name: string | null } | null;
+  stylists: { full_name: string | null } | null;
   services: { name: string | null } | null;
 }
 
@@ -42,7 +42,7 @@ const AdminBookings = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('bookings')
-      .select('id, booking_date, start_time, status, total_price, shops(name), profiles:customer_id(full_name, phone), barbers(full_name), services(name)')
+      .select('id, booking_date, start_time, status, total_price, shops(name), profiles:customer_id(full_name, phone), stylists(full_name), services(name)')
       .order('booking_date', { ascending: false });
 
     if (error) toast({ title: 'Error', description: error.message, variant: 'destructive' });
@@ -123,7 +123,7 @@ const AdminBookings = () => {
                     </div>
                     <p className="text-sm text-muted-foreground">
                       <CalendarDays className="mr-1 inline h-3.5 w-3.5" />
-                      {b.booking_date} · {b.start_time?.slice(0, 5)} · {b.shops?.name || 'Unknown Shop'} · {b.barbers?.full_name || 'Unknown Barber'}
+                      {b.booking_date} · {b.start_time?.slice(0, 5)} · {b.shops?.name || 'Unknown Shop'} · {b.stylists?.full_name || 'Unknown Stylist'}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {b.services?.name || 'Service'} · {maskPhone(b.profiles?.phone)}

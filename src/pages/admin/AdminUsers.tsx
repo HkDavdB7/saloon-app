@@ -12,14 +12,14 @@ import { Search, Eye, Loader2 } from 'lucide-react';
 
 const roleBadge: Record<string, string> = {
   customer: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  barber_admin: 'bg-primary/20 text-primary border-primary/30',
+  stylist_admin: 'bg-primary/20 text-primary border-primary/30',
   barber: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
   admin: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
 };
 
 const roleLabel: Record<string, string> = {
   customer: 'Customer',
-  barber_admin: 'Barber Admin',
+  stylist_admin: 'Stylist Admin',
   barber: 'Barber',
   admin: 'Platform Admin',
 };
@@ -97,7 +97,7 @@ const AdminUsers = () => {
           <SelectContent>
             <SelectItem value="all">All Roles</SelectItem>
             <SelectItem value="customer">Customer</SelectItem>
-            <SelectItem value="barber_admin">Barber Admin</SelectItem>
+            <SelectItem value="stylist_admin">Stylist Admin</SelectItem>
             <SelectItem value="barber">Barber</SelectItem>
             <SelectItem value="admin">Platform Admin</SelectItem>
           </SelectContent>
@@ -187,7 +187,7 @@ const AdminUsers = () => {
                   <SelectContent>
                     <SelectItem value="none">No role</SelectItem>
                     <SelectItem value="customer">Customer</SelectItem>
-                    <SelectItem value="barber_admin">Barber Admin</SelectItem>
+                    <SelectItem value="stylist_admin">Stylist Admin</SelectItem>
                     <SelectItem value="barber">Barber</SelectItem>
                     <SelectItem value="admin">Platform Admin</SelectItem>
                   </SelectContent>
