@@ -93,7 +93,7 @@ const ReviewForm = ({ open, onOpenChange, bookingId, shopId, shopName, onReviewS
           <Button
             onClick={handleSubmit}
             disabled={submitting || rating === 0}
-            className="w-full gold-gradient text-primary-foreground"
+            className="w-full rose-gradient text-primary-foreground"
           >
             {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Submit Review

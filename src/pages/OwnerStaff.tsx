@@ -147,7 +147,7 @@ const OwnerStaff = () => {
           <h1 className="font-display text-2xl font-bold text-foreground">My Team</h1>
           <p className="text-sm text-muted-foreground">{staff.length} stylists</p>
         </div>
-        <Button onClick={openInvite} className="gold-gradient text-primary-foreground">
+        <Button onClick={openInvite} className="rose-gradient text-primary-foreground">
           <Plus className="mr-1 h-4 w-4" /> Add Stylist
         </Button>
       </div>
@@ -212,7 +212,7 @@ const OwnerStaff = () => {
               <Label>Bio / Specialty</Label>
               <Input placeholder="e.g. Fades specialist" value={invBio} onChange={(e) => setInvBio(e.target.value)} />
             </div>
-            <Button onClick={handleInvite} disabled={saving} className="w-full gold-gradient text-primary-foreground">
+            <Button onClick={handleInvite} disabled={saving} className="w-full rose-gradient text-primary-foreground">
               {saving ? 'Saving...' : 'Add Stylist'}
             </Button>
           </div>

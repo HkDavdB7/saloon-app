@@ -55,7 +55,7 @@ const OwnerProfile = () => {
           <Input value={user?.phone || '—'} disabled className="bg-secondary/50 text-muted-foreground" />
         </div>
 
-        <Button onClick={handleSave} disabled={saving} className="w-full gold-gradient font-semibold text-primary-foreground">
+        <Button onClick={handleSave} disabled={saving} className="w-full rose-gradient font-semibold text-primary-foreground">
           {saving ? 'Saving...' : 'Save Profile'}
         </Button>
       </section>

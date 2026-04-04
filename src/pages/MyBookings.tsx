@@ -345,7 +345,7 @@ const MyBookings = () => {
               )}
 
               <Button
-                className="w-full gold-gradient text-primary-foreground"
+                className="w-full rose-gradient text-primary-foreground"
                 disabled={!rescheduleDate || !rescheduleTime || submittingReschedule}
                 onClick={handleReschedule}
               >

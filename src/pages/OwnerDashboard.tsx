@@ -80,7 +80,7 @@ const OwnerDashboard = () => {
       <div className="animate-fade-in">
         <div className="flex min-h-[60vh] items-center justify-center">
           <div className="max-w-sm text-center">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl gold-gradient">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl rose-gradient">
               <Store className="h-10 w-10 text-primary-foreground" />
             </div>
             <h1 className="font-display text-2xl font-bold text-foreground">Welcome to Salon for Stylist Admins</h1>
@@ -100,7 +100,7 @@ const OwnerDashboard = () => {
               ))}
             </div>
 
-            <Button onClick={() => navigate('/owner/shop')} className="mt-8 w-full gold-gradient font-semibold text-primary-foreground">
+            <Button onClick={() => navigate('/owner/shop')} className="mt-8 w-full rose-gradient font-semibold text-primary-foreground">
               Set Up My Shop <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>

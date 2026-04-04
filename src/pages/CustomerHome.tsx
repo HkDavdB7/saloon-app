@@ -74,7 +74,7 @@ const CustomerHome = () => {
     <CustomerLayout>
       <div className="px-4 pt-6 animate-fade-in" dir="rtl">
         <h1 className="font-display text-2xl font-bold text-foreground">
-          {t('nav.shops')} <span className="gold-text">{t('nav.home')}</span>
+          {t('nav.shops')} <span className="rose-text">{t('nav.home')}</span>
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">{t('common.search')}</p>
 

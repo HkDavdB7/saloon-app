@@ -36,7 +36,7 @@ const AdminLayout = () => {
           </div>
           <div>
             <h1 className="font-display text-lg font-bold text-foreground">Salon Admin</h1>
-            <Badge variant="outline" className="mt-0.5 text-[10px] gold-border text-primary">
+            <Badge variant="outline" className="mt-0.5 text-[10px] rose-border text-primary">
               Platform Admin
             </Badge>
           </div>

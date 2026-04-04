@@ -46,7 +46,7 @@ export const ar = {
     passwordMustMatch: 'كلمات المرور غير متطابقة',
     passwordTooShort: 'كلمة المرور 6 أحرف على الأقل',
     enterName: 'ما اسمك؟',
-    welcomeToSalon: 'مرحباً بك في قصر!',
+    welcomeToSalon: 'مرحباً بك في صالوننا!',
     enterEmailForReset: 'أدخل بريدك الإلكتروني لاستعادة كلمة المرور',
     checkEmail: 'تحقق من بريدك الإلكتروني لرابط استعادة كلمة المرور',
     checkInbox: 'تحقق من صندوق البريد.',

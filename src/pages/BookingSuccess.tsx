@@ -18,7 +18,7 @@ const BookingSuccess = () => {
   return (
     <CustomerLayout>
       <div className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center animate-fade-in">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full gold-gradient">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full rose-gradient">
           <CheckCircle2 className="h-10 w-10 text-primary-foreground" />
         </div>
         <h1 className="mt-6 font-display text-2xl font-bold text-foreground">Booking Confirmed!</h1>

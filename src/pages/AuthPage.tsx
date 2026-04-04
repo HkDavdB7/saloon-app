@@ -275,7 +275,7 @@ const AuthPage = () => {
           </button>
 
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full gold-gradient">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full rose-gradient">
               <Scissors className="h-8 w-8 text-primary-foreground" />
             </div>
             <h1 className="font-display text-2xl font-bold text-foreground">{t('auth.resetPassword')}</h1>
@@ -299,7 +299,7 @@ const AuthPage = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full gold-gradient py-5 font-semibold text-primary-foreground hover:opacity-90"
+                className="w-full rose-gradient py-5 font-semibold text-primary-foreground hover:opacity-90"
               >
                 {loading ? <Loader2 className="ms-2 h-4 w-4 animate-spin" /> : null}
                 {t('auth.sendResetLink')}
@@ -335,7 +335,7 @@ const AuthPage = () => {
         </button>
 
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full gold-gradient">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full rose-gradient">
             <Scissors className="h-8 w-8 text-primary-foreground" />
           </div>
           <h1 className="font-display text-2xl font-bold text-foreground">
@@ -365,7 +365,7 @@ const AuthPage = () => {
               onClick={() => switchMode('login')}
               className={`flex flex-1 items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition-all ${
                 mode === 'login'
-                  ? 'gold-gradient text-primary-foreground'
+                  ? 'rose-gradient text-primary-foreground'
                   : 'bg-secondary text-secondary-foreground hover:opacity-80'
               }`}
             >
@@ -375,7 +375,7 @@ const AuthPage = () => {
               onClick={() => switchMode('register')}
               className={`flex flex-1 items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition-all ${
                 mode === 'register'
-                  ? 'gold-gradient text-primary-foreground'
+                  ? 'rose-gradient text-primary-foreground'
                   : 'bg-secondary text-secondary-foreground hover:opacity-80'
               }`}
             >
@@ -442,7 +442,7 @@ const AuthPage = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full gold-gradient py-5 font-semibold text-primary-foreground hover:opacity-90"
+              className="w-full rose-gradient py-5 font-semibold text-primary-foreground hover:opacity-90"
             >
               {loading ? <Loader2 className="ms-2 h-4 w-4 animate-spin" /> : null}
               {mode === 'login' ? t('auth.signIn') : t('auth.sendOtp')}
@@ -467,7 +467,7 @@ const AuthPage = () => {
             <Button
               onClick={handleSetPassword}
               disabled={loading}
-              className="w-full gold-gradient py-5 font-semibold text-primary-foreground hover:opacity-90"
+              className="w-full rose-gradient py-5 font-semibold text-primary-foreground hover:opacity-90"
             >
               {loading ? <Loader2 className="ms-2 h-4 w-4 animate-spin" /> : null}
               {t('common.save')}
@@ -492,7 +492,7 @@ const AuthPage = () => {
             <Button
               onClick={handleVerifyOtp}
               disabled={loading || otp.length !== 6}
-              className="w-full gold-gradient py-5 font-semibold text-primary-foreground hover:opacity-90"
+              className="w-full rose-gradient py-5 font-semibold text-primary-foreground hover:opacity-90"
             >
               {loading ? <Loader2 className="ms-2 h-4 w-4 animate-spin" /> : null}
               {t('auth.verify')}

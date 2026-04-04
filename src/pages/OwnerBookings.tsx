@@ -123,7 +123,7 @@ const OwnerBookings = () => {
 
               {b.status === 'pending' && (
                 <div className="mt-3 flex gap-2">
-                  <Button size="sm" onClick={() => handleConfirm(b.id)} disabled={actionLoading === b.id} className="flex-1 gold-gradient text-xs text-primary-foreground">
+                  <Button size="sm" onClick={() => handleConfirm(b.id)} disabled={actionLoading === b.id} className="flex-1 rose-gradient text-xs text-primary-foreground">
                     {actionLoading === b.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <><Check className="mr-1 h-3 w-3" /> Confirm</>}
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => setCancelId(b.id)} className="flex-1 border-destructive/30 text-xs text-destructive">

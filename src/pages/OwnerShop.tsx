@@ -230,7 +230,7 @@ const OwnerShop = () => {
         <p className="text-xs text-muted-foreground">Upload up to 3 photos of your shop (coming soon)</p>
       </section>
 
-      <Button onClick={handleSave} disabled={saving} className="w-full gold-gradient font-semibold text-primary-foreground">
+      <Button onClick={handleSave} disabled={saving} className="w-full rose-gradient font-semibold text-primary-foreground">
         {saving ? 'Saving...' : 'Save Shop'}
       </Button>
     </div>

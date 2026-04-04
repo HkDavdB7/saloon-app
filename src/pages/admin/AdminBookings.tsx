@@ -137,7 +137,7 @@ const AdminBookings = () => {
                 <div className="mt-4 flex flex-wrap gap-2">
                   {b.status === 'pending' && (
                     <>
-                      <Button size="sm" onClick={() => updateStatus(b.id, 'confirmed')} disabled={actionLoading === b.id + 'confirmed'} className="gold-gradient text-xs text-primary-foreground">
+                      <Button size="sm" onClick={() => updateStatus(b.id, 'confirmed')} disabled={actionLoading === b.id + 'confirmed'} className="rose-gradient text-xs text-primary-foreground">
                         {actionLoading === b.id + 'confirmed' ? <Loader2 className="h-3 w-3 animate-spin" /> : <><Check className="mr-1 h-3 w-3" /> Confirm</>}
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => setCancelId(b.id)} className="border-destructive/30 text-xs text-destructive">

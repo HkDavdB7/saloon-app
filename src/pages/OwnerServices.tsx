@@ -119,7 +119,7 @@ const OwnerServices = () => {
           <h1 className="font-display text-2xl font-bold text-foreground">Services</h1>
           <p className="text-sm text-muted-foreground">{services.length} services</p>
         </div>
-        <Button onClick={openAddSheet} className="gold-gradient text-primary-foreground">
+        <Button onClick={openAddSheet} className="rose-gradient text-primary-foreground">
           <Plus className="mr-1 h-4 w-4" /> Add Service
         </Button>
       </div>
@@ -176,7 +176,7 @@ const OwnerServices = () => {
               <Label>Description (optional)</Label>
               <Textarea placeholder="Brief description..." value={formDesc} onChange={(e) => setFormDesc(e.target.value)} className="resize-none" maxLength={200} />
             </div>
-            <Button onClick={handleSave} disabled={saving} className="w-full gold-gradient text-primary-foreground">
+            <Button onClick={handleSave} disabled={saving} className="w-full rose-gradient text-primary-foreground">
               {saving ? 'Saving...' : 'Save'}
             </Button>
           </div>

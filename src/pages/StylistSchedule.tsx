@@ -253,7 +253,7 @@ const StylistSchedule = () => {
     <div className="mx-auto min-h-screen max-w-[430px] bg-background pb-20">
       <div className="px-4 pt-6 animate-fade-in">
         <h1 className="font-display text-2xl font-bold text-foreground">
-          My <span className="gold-text">Schedule</span>
+          My <span className="rose-text">Schedule</span>
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {stylist?.full_name} · {format(new Date(), 'EEEE, MMMM d')}
@@ -329,7 +329,7 @@ const StylistSchedule = () => {
                     <div className="mt-3 flex gap-2">
                       {b.status === 'pending' && (
                         <>
-                          <Button size="sm" onClick={() => handleAction(b.id, 'confirmed')} disabled={actionId === b.id} className="flex-1 gold-gradient text-xs text-primary-foreground">
+                          <Button size="sm" onClick={() => handleAction(b.id, 'confirmed')} disabled={actionId === b.id} className="flex-1 rose-gradient text-xs text-primary-foreground">
                             {actionId === b.id ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <Check className="mr-1 h-3 w-3" />}
                             Confirm
                           </Button>
@@ -340,7 +340,7 @@ const StylistSchedule = () => {
                       )}
                       {b.status === 'confirmed' && (
                         <>
-                          <Button size="sm" onClick={() => handleAction(b.id, 'completed')} disabled={actionId === b.id} className="flex-1 gold-gradient text-xs text-primary-foreground">
+                          <Button size="sm" onClick={() => handleAction(b.id, 'completed')} disabled={actionId === b.id} className="flex-1 rose-gradient text-xs text-primary-foreground">
                             {actionId === b.id ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <Check className="mr-1 h-3 w-3" />}
                             Complete
                           </Button>
@@ -432,7 +432,7 @@ const StylistSchedule = () => {
                   </div>
                 ))}
                 <Button
-                  className="w-full gold-gradient text-primary-foreground"
+                  className="w-full rose-gradient text-primary-foreground"
                   onClick={saveWeeklyHours}
                   disabled={savingHours}
                 >
