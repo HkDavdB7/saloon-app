@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="200" fill="#0f0f0f"/>
+  
+  <!-- Subtle gold ring -->
+  <circle cx="512" cy="460" r="300" fill="none" stroke="#C9A84C" stroke-width="4" opacity="0.25"/>
+
+  <!-- SCISSORS design -->
+  <!-- Pivot point -->
+  <circle cx="512" cy="460" r="28" fill="#C9A84C"/>
+  <circle cx="512" cy="460" r="14" fill="#0f0f0f"/>
+
+  <!-- Top-left blade (going from pivot up-left to tip) -->
+  <path d="M 500,448 L 220,210 Q 205,198 208,182 Q 211,164 228,162 Q 244,160 256,175 L 524,448 Z" fill="#C9A84C"/>
+  <!-- Top-left blade inner highlight -->
+  <path d="M 230,172 L 510,440" fill="none" stroke="#e8c96a" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  
+  <!-- Bottom-right blade (going from pivot down-right to tip) -->
+  <path d="M 524,472 L 804,710 Q 819,722 816,738 Q 813,756 796,758 Q 780,760 768,745 L 500,472 Z" fill="#C9A84C"/>
+  <!-- Bottom-right blade inner highlight -->
+  <path d="M 794,748 L 514,480" fill="none" stroke="#e8c96a" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Top-right blade (going from pivot up-right to tip) -->
+  <path d="M 524,448 L 804,210 Q 819,198 816,182 Q 813,164 796,162 Q 780,160 768,175 L 500,448 Z" fill="#C9A84C"/>
+  <!-- Top-right blade inner highlight -->
+  <path d="M 794,172 L 514,440" fill="none" stroke="#e8c96a" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Bottom-left blade (going from pivot down-left) -->
+  <path d="M 500,472 L 220,710 Q 205,722 208,738 Q 211,756 228,758 Q 244,760 256,745 L 524,472 Z" fill="#C9A84C"/>
+  <!-- Bottom-left blade inner highlight -->
+  <path d="M 230,748 L 510,480" fill="none" stroke="#e8c96a" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Handle rings — top-left -->
+  <circle cx="185" cy="340" r="65" fill="none" stroke="#C9A84C" stroke-width="24"/>
+  <!-- Handle rings — bottom-left -->
+  <circle cx="185" cy="580" r="65" fill="none" stroke="#C9A84C" stroke-width="24"/>
+
+  <!-- App name -->
+  <text x="512" y="900" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="100" font-weight="bold" fill="#C9A84C" letter-spacing="20">QASS</text>
+</svg>

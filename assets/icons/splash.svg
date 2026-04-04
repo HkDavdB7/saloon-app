@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732" width="2732" height="2732">
+  <!-- Background -->
+  <rect width="2732" height="2732" fill="#0f0f0f"/>
+  
+  <!-- Center scissors mark (scaled up for splash) -->
+  <!-- Pivot -->
+  <circle cx="1366" cy="1260" r="56" fill="#C9A84C"/>
+  <circle cx="1366" cy="1260" r="28" fill="#0f0f0f"/>
+
+  <!-- Top-left blade -->
+  <path d="M 1348,1239 L 836,780 Q 810,760 814,738 Q 818,716 840,714 Q 862,712 878,732 L 1384,1239 Z" fill="#C9A84C"/>
+  <!-- Bottom-right blade -->
+  <path d="M 1384,1281 L 1896,1740 Q 1922,1760 1918,1782 Q 1914,1804 1892,1806 Q 1870,1808 1854,1788 L 1348,1281 Z" fill="#C9A84C"/>
+  <!-- Top-right blade -->
+  <path d="M 1384,1239 L 1896,780 Q 1922,760 1918,738 Q 1914,716 1892,714 Q 1870,712 1854,732 L 1348,1239 Z" fill="#C9A84C"/>
+  <!-- Bottom-left blade -->
+  <path d="M 1348,1281 L 836,1740 Q 810,1760 814,1782 Q 818,1804 840,1806 Q 862,1808 878,1788 L 1384,1281 Z" fill="#C9A84C"/>
+
+  <!-- Handle rings -->
+  <circle cx="784" cy="990" r="130" fill="none" stroke="#C9A84C" stroke-width="48"/>
+  <circle cx="784" cy="1530" r="130" fill="none" stroke="#C9A84C" stroke-width="48"/>
+
+  <!-- App name -->
+  <text x="1366" y="2050" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="220" font-weight="bold" fill="#C9A84C" letter-spacing="40">QASS</text>
+  
+  <!-- Tagline -->
+  <text x="1366" y="2160" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="72" fill="#C9A84C" opacity="0.6" letter-spacing="8">YOUR BARBER, ANYTIME</text>
+</svg>
