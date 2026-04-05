@@ -34,7 +34,7 @@ const OwnerBookings = () => {
 
     const { data } = await supabase
       .from('bookings')
-      .select('id, booking_date, start_time, status, total_price, profiles:customer_id(full_name, phone), services(name, price_kd), stylists(full_name)')
+      .select('id, booking_date, start_time, status, total_price, profiles:customer_id(full_name, phone), services(name, price_kd), barbers(full_name)')
       .eq('shop_id', shop.id)
       .order('booking_date', { ascending: false });
 
@@ -113,7 +113,7 @@ const OwnerBookings = () => {
                 <div className="min-w-0 flex-1 space-y-1">
                   <p className="text-sm font-medium text-foreground">{(b.services as any)?.name || 'Service'}</p>
                   <p className="text-xs text-muted-foreground">
-                    {(b.stylists as any)?.full_name || 'Any stylist'} · {b.booking_date} · {b.start_time}
+                    {(b.barbers as any)?.full_name || 'Any stylist'} · {b.booking_date} · {b.start_time}
                   </p>
                   <p className="text-xs text-muted-foreground">{(b.profiles as any)?.full_name || 'Customer'} · {maskPhone((b.profiles as any)?.phone || '')}</p>
                   <p className="text-xs font-semibold text-primary">{Number(b.total_price).toFixed(3)} KD</p>

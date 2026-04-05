@@ -21,11 +21,11 @@ interface BookingRow {
   total_price: number;
   status: string;
   shop_id: string;
-  stylist_id: string;
+  barber_id: string;
   service_id: string;
   shops: { name: string } | null;
-  services: { name: string; duration_min: number } | null;
-  stylists: { full_name: string } | null;
+  services: { name: string; duration_minutes: number } | null;
+  barbers: { full_name: string } | null;
 }
 
 const StatusBadge = ({ status }: { status: string }) => {
@@ -68,7 +68,7 @@ const MyBookings = () => {
     const [bookingsRes, reviewsRes] = await Promise.all([
       supabase
         .from('bookings')
-        .select('id, booking_date, start_time, total_price, status, shop_id, stylist_id, service_id, shops(name), services(name, duration_min), stylists(full_name)')
+        .select('id, booking_date, start_time, total_price, status, shop_id, barber_id, service_id, shops(name), services(name, duration_minutes), barbers(full_name)')
         .eq('customer_id', user.id)
         .order('booking_date', { ascending: false }),
       supabase
@@ -107,7 +107,7 @@ const MyBookings = () => {
     const { data } = await supabase
       .from('availability')
       .select('time_slot, is_booked')
-      .eq('stylist_id', booking.stylist_id)
+      .eq('barber_id', booking.barber_id)
       .eq('date', dateStr)
       .order('time_slot');
     if (data && data.length > 0) {
@@ -143,7 +143,7 @@ const MyBookings = () => {
     }
     setSubmittingReschedule(true);
 
-    const duration = rescheduleBooking.services?.duration_min || 30;
+    const duration = rescheduleBooking.services?.duration_minutes || 30;
     const [h, m] = rescheduleTime.split(':').map(Number);
     const startMin = h * 60 + m;
     const endMin = startMin + duration;
@@ -180,7 +180,7 @@ const MyBookings = () => {
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm font-semibold text-foreground">{booking.shops?.name || 'Shop'}</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">{booking.services?.name} · {booking.stylists?.full_name || 'Any stylist'}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{booking.services?.name} · {booking.barbers?.full_name || 'Any stylist'}</p>
           </div>
           <StatusBadge status={booking.status} />
         </div>
@@ -281,7 +281,7 @@ const MyBookings = () => {
             <div className="space-y-4 mt-2">
               <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm">
                 <p className="font-medium text-foreground">{rescheduleBooking.shops?.name}</p>
-                <p className="text-xs text-muted-foreground">{rescheduleBooking.services?.name} · {rescheduleBooking.stylists?.full_name}</p>
+                <p className="text-xs text-muted-foreground">{rescheduleBooking.services?.name} · {rescheduleBooking.barbers?.full_name}</p>
                 <p className="text-xs text-muted-foreground">Current: {rescheduleBooking.booking_date} at {rescheduleBooking.start_time}</p>
               </div>
 

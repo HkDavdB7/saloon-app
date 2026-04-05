@@ -18,7 +18,7 @@ const OwnerStaff = () => {
   const [shopId, setShopId] = useState<string | null>(null);
   const [staff, setStaff] = useState<any[]>([]);
   const [permissionsOpen, setPermissionsOpen] = useState(false);
-  const [selectedStylist, setSelectedStylist] = useState<any | null>(null);
+  const [selectedBarber, setSelectedStylist] = useState<any | null>(null);
   const [permState, setPermState] = useState({
     can_manage_schedule: true,
     can_manage_bookings: false,
@@ -42,7 +42,7 @@ const OwnerStaff = () => {
     if (!shop) { setLoading(false); return; }
     setShopId(shop.id);
     const { data } = await supabase
-      .from('stylists')
+      .from('barbers')
       .select('id, name, bio, avatar_url, permissions, is_active, invite_email, profile_id')
       .eq('shop_id', shop.id)
       .eq('is_active', true)
@@ -71,7 +71,7 @@ const OwnerStaff = () => {
   const handleInvite = async () => {
     if (!validate() || !shopId) return;
     setSaving(true);
-    const { error } = await supabase.from('stylists').insert({
+    const { error } = await supabase.from('barbers').insert({
       shop_id: shopId,
       name: invName.trim(),
       bio: invBio.trim() || null,
@@ -95,7 +95,7 @@ const OwnerStaff = () => {
 
   const handleRemove = async () => {
     if (!removeId) return;
-    const { error } = await supabase.from('stylists').update({ is_active: false }).eq('id', removeId);
+    const { error } = await supabase.from('barbers').update({ is_active: false }).eq('id', removeId);
     if (error) { toast({ title: 'Error', description: error.message, variant: 'destructive' }); }
     else { toast({ title: 'Team member removed' }); }
     setRemoveId(null);
@@ -113,12 +113,12 @@ const OwnerStaff = () => {
   };
 
   const savePermissions = async () => {
-    if (!selectedStylist) return;
+    if (!selectedBarber) return;
     setSavingPerms(true);
     const { error } = await supabase
-      .from('stylists')
+      .from('barbers')
       .update({ permissions: permState })
-      .eq('id', selectedStylist.id);
+      .eq('id', selectedBarber.id);
 
     setSavingPerms(false);
     if (error) {
@@ -126,7 +126,7 @@ const OwnerStaff = () => {
       return;
     }
 
-    setStaff((prev) => prev.map((b) => (b.id === selectedStylist.id ? { ...b, permissions: permState } : b)));
+    setStaff((prev) => prev.map((b) => (b.id === selectedBarber.id ? { ...b, permissions: permState } : b)));
     toast({ title: 'Permissions updated' });
     setPermissionsOpen(false);
   };
@@ -145,7 +145,7 @@ const OwnerStaff = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-foreground">My Team</h1>
-          <p className="text-sm text-muted-foreground">{staff.length} stylists</p>
+          <p className="text-sm text-muted-foreground">{staff.length} barbers</p>
         </div>
         <Button onClick={openInvite} className="rose-gradient text-primary-foreground">
           <Plus className="mr-1 h-4 w-4" /> Add Stylist
@@ -222,11 +222,11 @@ const OwnerStaff = () => {
       <Sheet open={permissionsOpen} onOpenChange={setPermissionsOpen}>
         <SheetContent className="border-border bg-card">
           <SheetHeader><SheetTitle className="text-foreground">Staff Permissions</SheetTitle></SheetHeader>
-          {selectedStylist && (
+          {selectedBarber && (
             <div className="mt-6 space-y-4">
               <div>
                 <p className="text-xs text-muted-foreground">Stylist</p>
-                <p className="text-sm text-foreground">{selectedStylist.name}</p>
+                <p className="text-sm text-foreground">{selectedBarber.name}</p>
               </div>
 
               <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-3">

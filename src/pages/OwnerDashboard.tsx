@@ -84,7 +84,7 @@ const OwnerDashboard = () => {
               <Store className="h-10 w-10 text-primary-foreground" />
             </div>
             <h1 className="font-display text-2xl font-bold text-foreground">Welcome to Salon for Stylist Admins</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Let's set up your stylistshop to start accepting bookings</p>
+            <p className="mt-2 text-sm text-muted-foreground">Let's set up your salon to start accepting bookings</p>
 
             <div className="mt-8 space-y-3 text-left">
               {[

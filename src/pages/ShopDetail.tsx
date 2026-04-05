@@ -19,7 +19,7 @@ const ShopDetail = () => {
   const navigate = useNavigate();
   const [shop, setShop] = useState<any>(null);
   const [services, setServices] = useState<any[]>([]);
-  const [stylists, setStylists] = useState<any[]>([]);
+  const [barbers, setBarbers] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +33,7 @@ const ShopDetail = () => {
       const [shopRes, servRes, barbRes, revRes] = await Promise.all([
         supabase.from('shops').select('*').eq('id', id).maybeSingle(),
         supabase.from('services').select('*').eq('shop_id', id).eq('is_active', true),
-        supabase.from('stylists').select('*').eq('shop_id', id).eq('is_active', true),
+        supabase.from('barbers').select('*').eq('shop_id', id).eq('is_active', true),
         supabase.from('reviews').select('id, rating, comment, created_at, profiles(full_name)').eq('shop_id', id).order('created_at', { ascending: false }),
       ]);
 
@@ -50,7 +50,7 @@ const ShopDetail = () => {
 
       setShop(shopRes.data);
       setServices(servRes.data || []);
-      setStylists(barbRes.data || []);
+      setBarbers(barbRes.data || []);
       setReviews(revRes.data || []);
       setLoading(false);
     };
@@ -108,7 +108,7 @@ const ShopDetail = () => {
         <Tabs defaultValue="services" className="mt-5">
           <TabsList className="w-full">
             <TabsTrigger value="services" className="flex-1">{t('booking.selectService')} ({services.length})</TabsTrigger>
-            <TabsTrigger value="stylists" className="flex-1">{t('booking.selectStylist')} ({stylists.length})</TabsTrigger>
+            <TabsTrigger value="barbers" className="flex-1">{t('booking.selectStylist')} ({barbers.length})</TabsTrigger>
             <TabsTrigger value="reviews" className="flex-1">Reviews ({reviews.length})</TabsTrigger>
           </TabsList>
 
@@ -133,9 +133,9 @@ const ShopDetail = () => {
             ))}
           </TabsContent>
 
-          <TabsContent value="stylists" className="mt-4 space-y-3 pb-4">
-            {stylists.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">No stylists listed</p>}
-            {stylists.map((b: any) => (
+          <TabsContent value="barbers" className="mt-4 space-y-3 pb-4">
+            {barbers.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">No barbers listed</p>}
+            {barbers.map((b: any) => (
               <div key={b.id} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
                   {b.avatar_url ? <img src={b.avatar_url} alt={b.full_name} className="h-full w-full rounded-full object-cover" /> : <User className="h-5 w-5 text-muted-foreground" />}

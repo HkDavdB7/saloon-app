@@ -49,7 +49,7 @@ export const useAuth = () => useContext(AuthContext);
 const autoLinkStylist = async (userId: string, email: string) => {
   try {
     const { data } = await supabase
-      .from('stylists')
+      .from('barbers')
       .select('id')
       .eq('invite_email', email)
       .is('profile_id', null)
@@ -57,7 +57,7 @@ const autoLinkStylist = async (userId: string, email: string) => {
       .maybeSingle();
 
     if (data) {
-      await supabase.from('stylists').update({ profile_id: userId }).eq('id', data.id);
+      await supabase.from('barbers').update({ profile_id: userId }).eq('id', data.id);
     }
   } catch {
     // non-critical — silently ignore

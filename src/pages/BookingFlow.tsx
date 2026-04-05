@@ -20,42 +20,42 @@ const BookingFlow = () => {
 
   const [shop, setShop] = useState<any>(null);
   const [services, setServices] = useState<any[]>([]);
-  const [stylists, setStylists] = useState<any[]>([]);
+  const [barbers, setBarbers] = useState<any[]>([]);
   const [timeSlots, setTimeSlots] = useState<{ time: string; available: boolean }[]>([]);
   const [loadingShop, setLoadingShop] = useState(true);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const [selectedServiceId, setSelectedServiceId] = useState(searchParams.get('selected') || '');
-  const [selectedStylistId, setSelectedStylistId] = useState('any');
+  const [selectedBarberId, setSelectedBarberId] = useState('any');
   const [selectedDay, setSelectedDay] = useState(0);
   const [selectedTime, setSelectedTime] = useState('');
-  const [stylistsLoadError, setStylistsLoadError] = useState(false);
+  const [barbersLoadError, setBarbersLoadError] = useState(false);
   const { t } = useLanguage()
 
   const currentStep = step === 'service' ? 0 : step === 'stylist' ? 1 : step === 'time' ? 2 : 3;
   const selectedService = services.find((s) => s.id === selectedServiceId);
-  const selectedStylist = stylists.find((b) => b.id === selectedStylistId);
+  const selectedBarber = barbers.find((b) => b.id === selectedBarberId);
   const days = useMemo(() => Array.from({ length: 7 }).map((_, i) => addDays(new Date(), i)), []);
 
-  // Load shop + services + stylists
+  // Load shop + services + barbers
   useEffect(() => {
     const fetch = async () => {
       setLoadingShop(true);
-      setStylistsLoadError(false);
+      setBarbersLoadError(false);
       const [shopRes, servRes, barbRes] = await Promise.all([
         supabase.from('shops').select('*').eq('id', shopId).maybeSingle(),
         supabase.from('services').select('*').eq('shop_id', shopId).eq('is_active', true),
-        supabase.from('stylists').select('*').eq('shop_id', shopId),
+        supabase.from('barbers').select('*').eq('shop_id', shopId),
       ]);
       setShop(shopRes.data);
       setServices(servRes.data || []);
       if (barbRes.error) {
-        console.error('Stylists query failed:', barbRes.error.message);
-        setStylistsLoadError(true);
-        setStylists([]);
+        console.error('Barbers query failed:', barbRes.error.message);
+        setBarbersLoadError(true);
+        setBarbers([]);
       } else {
-        setStylists(barbRes.data || []);
+        setBarbers(barbRes.data || []);
       }
       setLoadingShop(false);
     };
@@ -65,9 +65,9 @@ const BookingFlow = () => {
   // Load availability when stylist + date change
   useEffect(() => {
     if (currentStep !== 2) return;
-    // Don't query if stylists haven't loaded yet (race condition guard)
-    if (stylists.length === 0) return;
-    const stylistId = selectedStylistId === 'any' ? stylists[0]?.id : selectedStylistId;
+    // Don't query if barbers haven't loaded yet (race condition guard)
+    if (barbers.length === 0) return;
+    const barberId = selectedBarberId === 'any' ? barbers[0]?.id : selectedBarberId;
 
     const dateStr = format(days[selectedDay], 'yyyy-MM-dd');
     setLoadingSlots(true);
@@ -77,7 +77,7 @@ const BookingFlow = () => {
       const { data } = await supabase
         .from('availability')
         .select('time_slot, is_booked')
-        .eq('stylist_id', stylistId)
+        .eq('barber_id', barberId)
         .eq('date', dateStr)
         .order('time_slot');
 
@@ -91,17 +91,17 @@ const BookingFlow = () => {
       setLoadingSlots(false);
     };
     fetchSlots();
-  }, [currentStep, selectedStylistId, selectedDay, stylists, days]);
+  }, [currentStep, selectedBarberId, selectedDay, barbers, days]);
 
   const goNext = () => {
-    // Guard: don't let user proceed to stylist step if stylists failed to load
-    if (currentStep === 0 && stylistsLoadError) {
-      toast.error('Failed to load stylists. Please try again.');
+    // Guard: don't let user proceed to stylist step if barbers failed to load
+    if (currentStep === 0 && barbersLoadError) {
+      toast.error('Failed to load barbers. Please try again.');
       return;
     }
-    // Guard: prevent skip to confirm if no stylists loaded
-    if (currentStep === 1 && stylists.length === 0 && !stylistsLoadError) {
-      toast.error('No stylists available for this salon.');
+    // Guard: prevent skip to confirm if no barbers loaded
+    if (currentStep === 1 && barbers.length === 0 && !barbersLoadError) {
+      toast.error('No barbers available for this salon.');
       return;
     }
     const nextRoutes = ['stylist', 'time', 'confirm'];
@@ -120,8 +120,8 @@ const BookingFlow = () => {
     const bookingDate = format(days[selectedDay], 'yyyy-MM-dd');
 
     // Resolve stylist — "Any stylist" picks first available; hard fail if none exist
-    const resolvedStylistId = selectedStylistId === 'any' ? stylists[0]?.id : selectedStylistId;
-    if (!resolvedStylistId) {
+    const resolvedBarberId = selectedBarberId === 'any' ? barbers[0]?.id : selectedBarberId;
+    if (!resolvedBarberId) {
       toast.error('No stylist available for this shop. Please try again later.');
       setSubmitting(false);
       return;
@@ -137,7 +137,7 @@ const BookingFlow = () => {
     const { data: conflicts } = await supabase
       .from('bookings')
       .select('id')
-      .eq('stylist_id', resolvedStylistId)
+      .eq('barber_id', resolvedBarberId)
       .eq('booking_date', bookingDate)
       .eq('start_time', selectedTime)
       .neq('status', 'cancelled')
@@ -152,7 +152,7 @@ const BookingFlow = () => {
     const { data, error } = await supabase.from('bookings').insert({
       customer_id: user.id,
       shop_id: shopId,
-      stylist_id: resolvedStylistId,
+      barber_id: resolvedBarberId,
       service_id: selectedServiceId,
       booking_date: bookingDate,
       start_time: selectedTime,
@@ -173,7 +173,7 @@ const BookingFlow = () => {
         bookingId: data.id,
         shopName: shop?.name,
         service: { name: selectedService.name, price: Number(selectedService.price_kd), duration: selectedService.duration_min },
-        stylist: selectedStylistId === 'any' ? 'Any stylist' : selectedStylist?.name,
+        stylist: selectedBarberId === 'any' ? 'Any stylist' : selectedBarber?.name,
         date: format(days[selectedDay], 'EEE, MMM d'),
         time: selectedTime,
       },
@@ -243,30 +243,30 @@ const BookingFlow = () => {
         {currentStep === 1 && (
           <div className="space-y-3">
             <button
-              onClick={() => setSelectedStylistId('any')}
-              className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-colors ${selectedStylistId === 'any' ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
+              onClick={() => setSelectedBarberId('any')}
+              className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-colors ${selectedBarberId === 'any' ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-lg">🎲</div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-foreground">Any stylist</p>
                 <p className="text-xs text-muted-foreground">First available</p>
               </div>
-              {selectedStylistId === 'any' && <Check className="h-4 w-4 text-primary" />}
+              {selectedBarberId === 'any' && <Check className="h-4 w-4 text-primary" />}
             </button>
-            {stylistsLoadError ? (
+            {barbersLoadError ? (
               <p className="py-4 text-center text-sm text-muted-foreground">
-                Failed to load stylists. Please go back and try again.
+                Failed to load barbers. Please go back and try again.
               </p>
-            ) : stylists.length === 0 ? (
+            ) : barbers.length === 0 ? (
               <p className="py-4 text-center text-sm text-muted-foreground">
-                No stylists listed for this salon yet.
+                No barbers listed for this salon yet.
               </p>
             ) : (
-              stylists.map((b) => (
+              barbers.map((b) => (
                 <button
                   key={b.id}
-                  onClick={() => setSelectedStylistId(b.id)}
-                  className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-colors ${selectedStylistId === b.id ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
+                  onClick={() => setSelectedBarberId(b.id)}
+                  className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-colors ${selectedBarberId === b.id ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
                     {b.avatar_url ? <img src={b.avatar_url} alt={b.name} className="h-full w-full rounded-full object-cover" /> : <User className="h-5 w-5 text-muted-foreground" />}
@@ -275,7 +275,7 @@ const BookingFlow = () => {
                     <p className="text-sm font-medium text-foreground">{b.name}</p>
                     {b.bio && <p className="text-xs text-muted-foreground">{b.bio}</p>}
                   </div>
-                  {selectedStylistId === b.id && <Check className="h-4 w-4 text-primary" />}
+                  {selectedBarberId === b.id && <Check className="h-4 w-4 text-primary" />}
                 </button>
               ))
             )}
@@ -357,7 +357,7 @@ const BookingFlow = () => {
               <div className="h-px bg-border" />
               <div>
                 <p className="text-[10px] uppercase text-muted-foreground">Stylist</p>
-                <p className="text-sm font-medium text-foreground">{selectedStylistId === 'any' ? 'Any stylist' : selectedStylist?.name}</p>
+                <p className="text-sm font-medium text-foreground">{selectedBarberId === 'any' ? 'Any stylist' : selectedBarber?.name}</p>
               </div>
               <div className="h-px bg-border" />
               <div>

@@ -104,7 +104,7 @@ const OwnerShop = () => {
         toast({ title: 'Error', description: error.message, variant: 'destructive' });
       } else {
         setShopId(data.id);
-        toast({ title: 'Shop created!', description: 'Your stylistshop is now set up.' });
+        toast({ title: 'Shop created!', description: 'Your salon is now set up.' });
       }
     }
     setSaving(false);
@@ -128,7 +128,7 @@ const OwnerShop = () => {
     <div className="animate-fade-in space-y-8">
       <div>
         <h1 className="font-display text-2xl font-bold text-foreground">My Shop</h1>
-        <p className="text-sm text-muted-foreground">Set up and manage your stylistshop details</p>
+        <p className="text-sm text-muted-foreground">Set up and manage your salon details</p>
       </div>
 
       {/* Shop Status */}

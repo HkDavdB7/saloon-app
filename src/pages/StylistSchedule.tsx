@@ -38,7 +38,7 @@ const defaultWeeklyHours = () => ({
 
 type WeeklyHours = Record<string, { enabled: boolean; start: string; end: string }>;
 
-const StylistSchedule = () => {
+const BarberSchedule = () => {
   const { user } = useAuth();
   const [stylist, setStylist] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
@@ -75,7 +75,7 @@ const StylistSchedule = () => {
       setLoading(true);
       setError(null);
       const { data, error: err } = await supabase
-        .from('stylists')
+        .from('barbers')
         .select('*')
         .eq('profile_id', user.id)
         .eq('is_active', true)
@@ -97,7 +97,7 @@ const StylistSchedule = () => {
       const { data } = await supabase
         .from('stylist_schedule')
         .select('day, start_time, end_time, is_working')
-        .eq('stylist_id', stylist.id);
+        .eq('barber_id', stylist.id);
       if (data && data.length > 0) {
         const hours: WeeklyHours = defaultWeeklyHours();
         data.forEach((row: any) => {
@@ -120,13 +120,13 @@ const StylistSchedule = () => {
       supabase
         .from('bookings')
         .select('id, booking_date, start_time, end_time, status, total_price, profiles:customer_id(full_name), services(name)')
-        .eq('stylist_id', stylist.id)
+        .eq('barber_id', stylist.id)
         .eq('booking_date', selectedDate)
         .order('start_time'),
       supabase
         .from('availability')
         .select('id')
-        .eq('stylist_id', stylist.id)
+        .eq('barber_id', stylist.id)
         .eq('date', selectedDate),
     ]);
     setBookings(bookingsRes.data || []);
@@ -162,12 +162,12 @@ const StylistSchedule = () => {
     if (!stylist) return;
     setTogglingAvail(true);
     if (isAvailable) {
-      await supabase.from('availability').delete().eq('stylist_id', stylist.id).eq('date', selectedDate).eq('is_booked', false);
+      await supabase.from('availability').delete().eq('barber_id', stylist.id).eq('date', selectedDate).eq('is_booked', false);
       setIsAvailable(false);
       toast.success('Marked as unavailable');
     } else {
       const { error } = await supabase.from('availability').insert({
-        stylist_id: stylist.id,
+        barber_id: stylist.id,
         date: selectedDate,
         time_slot: '08:00',
         is_booked: false,
@@ -191,7 +191,7 @@ const StylistSchedule = () => {
     // Upsert each day
     const dayIndex: Record<string, number> = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
     const rows = WEEKDAYS.map(day => ({
-      stylist_id: stylist.id,
+      barber_id: stylist.id,
       day: dayIndex[day],
       start_time: weeklyHours[day].start,
       end_time: weeklyHours[day].end,
@@ -201,7 +201,7 @@ const StylistSchedule = () => {
     // Upsert — avoids data loss if insert fails (no delete-then-insert race condition)
     const { error } = await supabase
       .from('stylist_schedule')
-      .upsert(rows, { onConflict: 'stylist_id,day' });
+      .upsert(rows, { onConflict: 'barber_id,day' });
 
     setSavingHours(false);
     if (error) {
@@ -463,4 +463,4 @@ const StylistSchedule = () => {
   );
 };
 
-export default StylistSchedule;
+export default BarberSchedule;
