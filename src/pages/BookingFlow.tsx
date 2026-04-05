@@ -30,6 +30,7 @@ const BookingFlow = () => {
   const [selectedStylistId, setSelectedStylistId] = useState('any');
   const [selectedDay, setSelectedDay] = useState(0);
   const [selectedTime, setSelectedTime] = useState('');
+  const [stylistsLoadError, setStylistsLoadError] = useState(false);
   const { t } = useLanguage()
 
   const currentStep = step === 'service' ? 0 : step === 'stylist' ? 1 : step === 'time' ? 2 : 3;
@@ -41,6 +42,7 @@ const BookingFlow = () => {
   useEffect(() => {
     const fetch = async () => {
       setLoadingShop(true);
+      setStylistsLoadError(false);
       const [shopRes, servRes, barbRes] = await Promise.all([
         supabase.from('shops').select('*').eq('id', shopId).maybeSingle(),
         supabase.from('services').select('*').eq('shop_id', shopId).eq('is_active', true),
@@ -48,7 +50,13 @@ const BookingFlow = () => {
       ]);
       setShop(shopRes.data);
       setServices(servRes.data || []);
-      setStylists(barbRes.data || []);
+      if (barbRes.error) {
+        console.error('Stylists query failed:', barbRes.error.message);
+        setStylistsLoadError(true);
+        setStylists([]);
+      } else {
+        setStylists(barbRes.data || []);
+      }
       setLoadingShop(false);
     };
     fetch();
@@ -57,6 +65,8 @@ const BookingFlow = () => {
   // Load availability when stylist + date change
   useEffect(() => {
     if (currentStep !== 2) return;
+    // Don't query if stylists haven't loaded yet (race condition guard)
+    if (stylists.length === 0) return;
     const stylistId = selectedStylistId === 'any' ? stylists[0]?.id : selectedStylistId;
 
     const dateStr = format(days[selectedDay], 'yyyy-MM-dd');
@@ -84,6 +94,16 @@ const BookingFlow = () => {
   }, [currentStep, selectedStylistId, selectedDay, stylists, days]);
 
   const goNext = () => {
+    // Guard: don't let user proceed to stylist step if stylists failed to load
+    if (currentStep === 0 && stylistsLoadError) {
+      toast.error('Failed to load stylists. Please try again.');
+      return;
+    }
+    // Guard: prevent skip to confirm if no stylists loaded
+    if (currentStep === 1 && stylists.length === 0 && !stylistsLoadError) {
+      toast.error('No stylists available for this salon.');
+      return;
+    }
     const nextRoutes = ['stylist', 'time', 'confirm'];
     if (currentStep < 3) navigate(`/book/${shopId}/${nextRoutes[currentStep]}`);
   };
@@ -233,22 +253,32 @@ const BookingFlow = () => {
               </div>
               {selectedStylistId === 'any' && <Check className="h-4 w-4 text-primary" />}
             </button>
-            {stylists.map((b) => (
-              <button
-                key={b.id}
-                onClick={() => setSelectedStylistId(b.id)}
-                className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-colors ${selectedStylistId === b.id ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
-                  {b.avatar_url ? <img src={b.avatar_url} alt={b.name} className="h-full w-full rounded-full object-cover" /> : <User className="h-5 w-5 text-muted-foreground" />}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground">{b.name}</p>
-                  {b.bio && <p className="text-xs text-muted-foreground">{b.bio}</p>}
-                </div>
-                {selectedStylistId === b.id && <Check className="h-4 w-4 text-primary" />}
-              </button>
-            ))}
+            {stylistsLoadError ? (
+              <p className="py-4 text-center text-sm text-muted-foreground">
+                Failed to load stylists. Please go back and try again.
+              </p>
+            ) : stylists.length === 0 ? (
+              <p className="py-4 text-center text-sm text-muted-foreground">
+                No stylists listed for this salon yet.
+              </p>
+            ) : (
+              stylists.map((b) => (
+                <button
+                  key={b.id}
+                  onClick={() => setSelectedStylistId(b.id)}
+                  className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-colors ${selectedStylistId === b.id ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
+                    {b.avatar_url ? <img src={b.avatar_url} alt={b.name} className="h-full w-full rounded-full object-cover" /> : <User className="h-5 w-5 text-muted-foreground" />}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground">{b.name}</p>
+                    {b.bio && <p className="text-xs text-muted-foreground">{b.bio}</p>}
+                  </div>
+                  {selectedStylistId === b.id && <Check className="h-4 w-4 text-primary" />}
+                </button>
+              ))
+            )}
             <Button className="mt-4 w-full" onClick={goNext}>
               {t('common.continue')} <ChevronRight className="mr-1 h-4 w-4 rtl:rotate-180" />
             </Button>

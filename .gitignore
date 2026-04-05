@@ -27,3 +27,4 @@ dist-ssr
 /android
 /ios
 .vercel
+.env*.local

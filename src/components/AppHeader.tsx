@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Scissors } from 'lucide-react';
+import { LogOut, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const AppHeader = () => {
@@ -13,18 +13,18 @@ const AppHeader = () => {
   };
 
   const roleBadgeLabel: Record<string, string> = {
-    customer: 'Customer',
-    stylist_admin: 'Stylist Admin',
-    stylist: 'Stylist',
-    admin: 'Admin',
+    customer: 'عميلة',
+    stylist_admin: 'مديرة صالون',
+    stylist: 'ستليست',
+    admin: 'مديرة',
   };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md" dir="rtl">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-3">
-          <Scissors className="h-5 w-5 text-primary" />
-          <span className="font-display text-lg font-bold text-primary">Salon</span>
+          <Sparkles className="h-5 w-5 text-primary" />
+          <span className="font-display text-lg font-bold text-primary">صالون</span>
         </div>
 
         <div className="flex items-center gap-3">

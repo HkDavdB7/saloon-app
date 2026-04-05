@@ -18,6 +18,19 @@ const roleRoutes = {
 
 const RESEND_COOLDOWN = 60;
 
+// Translate Supabase auth error messages to Arabic
+const tAuthError = (msg: string | undefined): string => {
+  if (!msg) return '';
+  const m = msg.toLowerCase();
+  if (m.includes('invalid login') || m.includes('invalid credentials')) return 'بيانات الدخول غير صحيحة';
+  if (m.includes('email not confirmed')) return 'لم يتم تأكيد البريد الإلكتروني';
+  if (m.includes('already registered')) return 'هذا البريد مسجل مسبقاً';
+  if (m.includes('invalid otp') || m.includes('invalid code')) return 'الرمز غير صحيح';
+  if (m.includes('expired')) return 'انتهت صلاحية الرمز';
+  if (m.includes('rate limit') || m.includes('too many')) return 'محاولات كثيرة، حاول لاحقاً';
+  return msg;
+};
+
 const maskEmail = (email: string) => {
   const [local, domain] = email.split('@');
   if (!domain) return email;
@@ -129,7 +142,7 @@ const AuthPage = () => {
       setOtpSent(true);
       startResendTimer();
     } catch (err: any) {
-      setError(err.message || t('common.error'));
+      setError(tAuthError(err.message) || t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -154,7 +167,7 @@ const AuthPage = () => {
       });
       if (signInError) throw signInError;
     } catch (err: any) {
-      setError(err.message || t('auth.signInError'));
+      setError(tAuthError(err.message) || t('auth.signInError'));
     } finally {
       setLoading(false);
     }
@@ -172,7 +185,7 @@ const AuthPage = () => {
       if (resetError) throw resetError;
       setResetSent(true);
     } catch (err: any) {
-      setError(err.message || 'Unable to send reset email');
+      setError(tAuthError(err.message) || 'تعذر إرسال البريد');
     } finally {
       setLoading(false);
     }
@@ -226,7 +239,7 @@ const AuthPage = () => {
       setOtpSent(false);
       setAwaitingPasswordSetup(true);
     } catch (err: any) {
-      setError(err.message || t('common.error'));
+      setError(tAuthError(err.message) || t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -255,7 +268,7 @@ const AuthPage = () => {
       setSetupPassword('');
       setConfirmPassword('');
     } catch (err: any) {
-      setError(err.message || 'Unable to set password, please retry');
+      setError(tAuthError(err.message) || 'تعذر تعيين كلمة المرور');
     } finally {
       setLoading(false);
     }
