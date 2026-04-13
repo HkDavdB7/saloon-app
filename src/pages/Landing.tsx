@@ -49,6 +49,13 @@ const Landing = () => {
         >
           {t('auth.getStarted')}
         </Button>
+
+        {/* Legal links */}
+        <div className="fixed bottom-4 left-0 right-0 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+          <a href="/privacy" className="hover:text-foreground px-3 py-2 min-h-[44px] inline-flex items-center">سياسة الخصوصية</a>
+          <span>·</span>
+          <a href="/terms" className="hover:text-foreground px-3 py-2 min-h-[44px] inline-flex items-center">الشروط والأحكام</a>
+        </div>
       </div>
     </div>
   );
