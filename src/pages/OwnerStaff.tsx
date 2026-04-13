@@ -11,10 +11,12 @@ import { useToast } from '@/hooks/use-toast';
 import { Plus, Trash2, Users, User, Mail } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const OwnerStaff = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [shopId, setShopId] = useState<string | null>(null);
   const [staff, setStaff] = useState<any[]>([]);
   const [permissionsOpen, setPermissionsOpen] = useState(false);
@@ -84,9 +86,9 @@ const OwnerStaff = () => {
       },
     });
     if (error) {
-      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
     } else {
-      toast({ title: 'Stylist added!', description: `${invName} has been added to your team.` });
+      toast({ title: t('owner.stylistAdded'), description: `${invName} تمت إضافتها إلى فريق عملك.` });
       setSheetOpen(false);
     }
     setSaving(false);
@@ -96,8 +98,8 @@ const OwnerStaff = () => {
   const handleRemove = async () => {
     if (!removeId) return;
     const { error } = await supabase.from('barbers').update({ is_active: false }).eq('id', removeId);
-    if (error) { toast({ title: 'Error', description: error.message, variant: 'destructive' }); }
-    else { toast({ title: 'Team member removed' }); }
+    if (error) { toast({ title: 'خطأ', description: error.message, variant: 'destructive' }); }
+    else { toast({ title: 'تمت إزالة成员' }); }
     setRemoveId(null);
     fetchStaff();
   };
@@ -144,18 +146,18 @@ const OwnerStaff = () => {
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-foreground">My Team</h1>
+          <h1 className="font-display text-2xl font-bold text-foreground">{t('owner.team')}</h1>
           <p className="text-sm text-muted-foreground">{staff.length} barbers</p>
         </div>
         <Button onClick={openInvite} className="rose-gradient text-primary-foreground">
-          <Plus className="mr-1 h-4 w-4" /> Add Stylist
+          <Plus className="mr-1 h-4 w-4" /> {t('owner.addStylist')}
         </Button>
       </div>
 
       {staff.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-12 text-center">
           <Users className="mx-auto h-10 w-10 text-muted-foreground" />
-          <p className="mt-3 text-muted-foreground">No team members yet. Add your first stylist!</p>
+          <p className="mt-3 text-muted-foreground">{t('owner.noTeamYet')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -195,25 +197,25 @@ const OwnerStaff = () => {
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetContent side="bottom" className="border-border bg-card">
-          <SheetHeader><SheetTitle className="text-foreground">Add Stylist</SheetTitle></SheetHeader>
+          <SheetHeader><SheetTitle className="text-foreground">{t('owner.addStylist')}</SheetTitle></SheetHeader>
           <div className="mt-4 space-y-4">
             <div className="space-y-1.5">
-              <Label>Full Name *</Label>
-              <Input placeholder="e.g. Ali" value={invName} onChange={(e) => setInvName(e.target.value)} />
+              <Label>{t('owner.fullName')} *</Label>
+              <Input placeholder="مثال: فاطمة" value={invName} onChange={(e) => setInvName(e.target.value)} />
               {formErrors.name && <p className="text-xs text-destructive">{formErrors.name}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label>Invite Email</Label>
-              <Input type="email" placeholder="stylist@email.com" value={invEmail} onChange={(e) => setInvEmail(e.target.value)} />
-              <p className="text-[11px] text-muted-foreground">Optional — their account will auto-link when they log in with this email</p>
+              <Label>{t('owner.inviteEmail')}</Label>
+              <Input type="email" placeholder="مثال: stylist@email.com" value={invEmail} onChange={(e) => setInvEmail(e.target.value)} />
+              <p className="text-[11px] text-muted-foreground">{t('owner.optionalHint')}</p>
               {formErrors.email && <p className="text-xs text-destructive">{formErrors.email}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label>Bio / Specialty</Label>
-              <Input placeholder="e.g. Fades specialist" value={invBio} onChange={(e) => setInvBio(e.target.value)} />
+              <Label>{t('owner.bioSpecialty')}</Label>
+              <Input placeholder={t('owner.bioPlaceholder')} value={invBio} onChange={(e) => setInvBio(e.target.value)} />
             </div>
             <Button onClick={handleInvite} disabled={saving} className="w-full rose-gradient text-primary-foreground">
-              {saving ? 'Saving...' : 'Add Stylist'}
+              {saving ? t('owner.saving') : t('owner.addStylist')}
             </Button>
           </div>
         </SheetContent>
@@ -262,12 +264,12 @@ const OwnerStaff = () => {
       <AlertDialog open={!!removeId} onOpenChange={(o) => !o && setRemoveId(null)}>
         <AlertDialogContent className="border-border bg-card">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-foreground">Remove Team Member</AlertDialogTitle>
-            <AlertDialogDescription>This stylist will be deactivated and won't receive new bookings.</AlertDialogDescription>
+            <AlertDialogTitle className="text-foreground">{t('owner.removeTeamMember')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('owner.removeTeamMemberDesc')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-border">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRemove} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Remove</AlertDialogAction>
+            <AlertDialogCancel className="border-border">{t('owner.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRemove} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">{t('owner.remove')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
