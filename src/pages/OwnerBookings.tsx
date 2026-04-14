@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { CalendarDays, Check, X, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const statusColors: Record<string, string> = {
   confirmed: 'bg-primary/15 text-primary border-primary/30',
@@ -15,11 +16,13 @@ const statusColors: Record<string, string> = {
 };
 
 const tabs = ['All', 'Pending', 'Confirmed', 'Cancelled'] as const;
+const tabKeys = ['owner.all', 'owner.pending', 'owner.confirmed', 'owner.cancelled'] as const;
 type TabKey = (typeof tabs)[number];
 
 const OwnerBookings = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabKey>('All');
@@ -34,7 +37,7 @@ const OwnerBookings = () => {
 
     const { data } = await supabase
       .from('bookings')
-      .select('id, booking_date, start_time, status, total_price, profiles:customer_id(full_name, phone), services(name, price_kd), barbers(full_name)')
+      .select('id, booking_date, start_time, status, total_price, profiles:customer_id(full_name, phone), services(name, price), barbers(name)')
       .eq('shop_id', shop.id)
       .order('booking_date', { ascending: false });
 
@@ -65,10 +68,10 @@ const OwnerBookings = () => {
   const maskPhone = (p: string) => p ? p.slice(0, 4) + ' XXXXX' + p.slice(-3) : '—';
 
   const emptyMessages: Record<TabKey, string> = {
-    All: "No bookings yet — share your shop to get started!",
-    Pending: "No pending bookings — you're all caught up!",
-    Confirmed: "No confirmed bookings.",
-    Cancelled: "No cancelled bookings — great record! 🎉",
+    All: t('owner.noBookingsYet'),
+    Pending: t('owner.noBookingsYet'),
+    Confirmed: t('owner.noBookingsYet'),
+    Cancelled: t('owner.noBookingsYet'),
   };
 
   if (loading) {
@@ -84,18 +87,18 @@ const OwnerBookings = () => {
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-foreground">Bookings</h1>
+        <h1 className="font-display text-2xl font-bold text-foreground">{t('nav.bookings')}</h1>
         <p className="text-sm text-muted-foreground">{bookings.length} total</p>
       </div>
 
       <div className="flex gap-1 rounded-lg border border-border bg-secondary/30 p-1">
-        {tabs.map((tab) => (
+        {tabs.map((tab, idx) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${activeTab === tab ? 'bg-primary/15 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
           >
-            {tab} ({tab === 'All' ? bookings.length : bookings.filter(b => b.status === tab.toLowerCase()).length})
+            {t(tabKeys[idx])} ({tab === 'All' ? bookings.length : bookings.filter(b => b.status === tab.toLowerCase()).length})
           </button>
         ))}
       </div>
@@ -113,7 +116,7 @@ const OwnerBookings = () => {
                 <div className="min-w-0 flex-1 space-y-1">
                   <p className="text-sm font-medium text-foreground">{(b.services as any)?.name || 'Service'}</p>
                   <p className="text-xs text-muted-foreground">
-                    {(b.barbers as any)?.full_name || 'Any stylist'} · {b.booking_date} · {b.start_time}
+                    {(b.barbers as any)?.name || 'Any stylist'} · {b.booking_date} · {b.start_time}
                   </p>
                   <p className="text-xs text-muted-foreground">{(b.profiles as any)?.full_name || 'Customer'} · {maskPhone((b.profiles as any)?.phone || '')}</p>
                   <p className="text-xs font-semibold text-primary">{Number(b.total_price).toFixed(3)} KD</p>

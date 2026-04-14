@@ -71,6 +71,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(isBypass ? false : true);
 
   const fetchProfile = async (userId: string, userEmail?: string) => {
+    // Block unverified emails — redirect to auth with a message
+    if (!user?.email_confirmed_at) {
+      await supabase.auth.signOut();
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      window.location.href = '/auth?reason=unverified';
+      return;
+    }
+
     const { data, error } = await supabase
       .from('profiles')
       .select('*')

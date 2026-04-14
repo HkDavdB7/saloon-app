@@ -5,12 +5,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import { LogOut, User } from 'lucide-react';
 
 const OwnerProfile = () => {
   const { toast } = useToast();
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [fullName, setFullName] = useState(profile?.full_name || '');
   const [saving, setSaving] = useState(false);
 
@@ -30,8 +32,8 @@ const OwnerProfile = () => {
   return (
     <div className="animate-fade-in space-y-8">
       <div>
-        <h1 className="font-display text-2xl font-bold text-foreground">Profile</h1>
-        <p className="text-sm text-muted-foreground">Manage your account</p>
+        <h1 className="font-display text-2xl font-bold text-foreground">{t('nav.profile')}</h1>
+        <p className="text-sm text-muted-foreground">{t('owner.profile') || t('nav.profile')}</p>
       </div>
 
       <section className="space-y-4 rounded-xl border border-border bg-card p-5">
@@ -46,22 +48,22 @@ const OwnerProfile = () => {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="fullName">Full Name</Label>
+          <Label htmlFor="fullName">{t('owner.fullName')}</Label>
           <Input id="fullName" placeholder="Your name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
         </div>
 
         <div className="space-y-1.5">
-          <Label>Phone</Label>
+          <Label>{t('owner.phone')}</Label>
           <Input value={user?.phone || '—'} disabled className="bg-secondary/50 text-muted-foreground" />
         </div>
 
         <Button onClick={handleSave} disabled={saving} className="w-full rose-gradient font-semibold text-primary-foreground">
-          {saving ? 'Saving...' : 'Save Profile'}
+          {saving ? t('owner.saving') : t('common.save')}
         </Button>
       </section>
 
       <Button onClick={handleSignOut} variant="outline" className="w-full border-destructive/30 text-destructive hover:bg-destructive/10">
-        <LogOut className="mr-2 h-4 w-4" /> Sign Out
+        <LogOut className="mr-2 h-4 w-4" /> {t('auth.signOut')}
       </Button>
     </div>
   );

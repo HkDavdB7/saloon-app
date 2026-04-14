@@ -256,7 +256,7 @@ const BarberSchedule = () => {
           My <span className="rose-text">Schedule</span>
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {stylist?.full_name} · {format(new Date(), 'EEEE, MMMM d')}
+          {stylist?.Name || stylist?.full_name} · {format(new Date(), 'EEEE, MMMM d')}
         </p>
 
         <Tabs defaultValue="day" className="mt-4">

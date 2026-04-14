@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const statusColors: Record<string, string> = {
   confirmed: 'bg-primary/15 text-primary border-primary/30',
@@ -16,6 +17,7 @@ const statusColors: Record<string, string> = {
 const OwnerDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [shop, setShop] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [todayCount, setTodayCount] = useState(0);
@@ -60,6 +62,10 @@ const OwnerDashboard = () => {
       setLoading(false);
     };
     fetchData();
+
+    // Poll every 30s so owner sees new bookings without manual refresh
+    const interval = setInterval(fetchData, 30_000);
+    return () => clearInterval(interval);
   }, [user]);
 
   if (loading) {
@@ -83,15 +89,15 @@ const OwnerDashboard = () => {
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl rose-gradient">
               <Store className="h-10 w-10 text-primary-foreground" />
             </div>
-            <h1 className="font-display text-2xl font-bold text-foreground">Welcome to Salon for Stylist Admins</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Let's set up your salon to start accepting bookings</p>
+            <h1 className="font-display text-2xl font-bold text-foreground">{t('owner.dashboard')}</h1>
+            <p className="mt-2 text-sm text-muted-foreground">{t('owner.setUpMyShop')}</p>
 
             <div className="mt-8 space-y-3 text-left">
               {[
-                { done: true, label: 'Create your account' },
-                { done: false, label: 'Set up your shop' },
-                { done: false, label: 'Add your services' },
-                { done: false, label: 'Add your team' },
+                { done: true, label: t('auth.getStarted') },
+                { done: false, label: t('owner.setUpMyShop') },
+                { done: false, label: t('owner.manageServices') },
+                { done: false, label: t('owner.inviteEmail') },
               ].map((step, i) => (
                 <div key={i} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
                   {step.done ? <CheckCircle2 className="h-5 w-5 text-primary" /> : <Circle className="h-5 w-5 text-muted-foreground" />}
@@ -101,7 +107,7 @@ const OwnerDashboard = () => {
             </div>
 
             <Button onClick={() => navigate('/owner/shop')} className="mt-8 w-full rose-gradient font-semibold text-primary-foreground">
-              Set Up My Shop <ArrowRight className="ml-2 h-4 w-4" />
+              {t('owner.setUpMyShop')} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -112,16 +118,16 @@ const OwnerDashboard = () => {
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">{shop.name}</p>
+        <h1 className="font-display text-2xl font-bold text-foreground">{t('owner.dashboard')}</h1>
+        <p className="text-sm text-muted-foreground">{shop?.name}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: "Today's Bookings", value: String(todayCount), icon: Calendar },
-          { label: "Month Revenue", value: `${monthRevenue.toFixed(3)} KD`, icon: TrendingUp },
-          { label: 'Pending', value: String(pendingCount), icon: Clock, link: '/owner/bookings' },
-          { label: "This Month", value: `${monthRevenue.toFixed(3)} KD`, icon: Calendar },
+          { label: t('owner.todayBookings'), value: String(todayCount), icon: Calendar },
+          { label: t('owner.monthRevenue'), value: `${monthRevenue.toFixed(3)} KD`, icon: TrendingUp },
+          { label: t('owner.pending'), value: String(pendingCount), icon: Clock, link: '/owner/bookings' },
+          { label: t('owner.thisMonth'), value: `${monthRevenue.toFixed(3)} KD`, icon: Calendar },
         ].map((stat) =>
           stat.link ? (
             <button key={stat.label} onClick={() => navigate(stat.link!)} className="rounded-xl border border-border bg-card p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/5">
@@ -140,14 +146,14 @@ const OwnerDashboard = () => {
       </div>
 
       <div className="flex gap-3">
-        <Button onClick={() => navigate('/owner/bookings')} variant="outline" className="flex-1 border-primary/30 text-primary hover:bg-primary/10">View Today's Bookings</Button>
-        <Button onClick={() => navigate('/owner/services')} variant="outline" className="flex-1 border-border">Manage Services</Button>
+        <Button onClick={() => navigate('/owner/bookings')} variant="outline" className="flex-1 border-primary/30 text-primary hover:bg-primary/10">{t('owner.viewTodaysBookings')}</Button>
+        <Button onClick={() => navigate('/owner/services')} variant="outline" className="flex-1 border-border">{t('owner.manageServices')}</Button>
       </div>
 
       <div>
-        <h2 className="mb-3 font-display text-lg font-semibold text-foreground">Recent Bookings</h2>
+        <h2 className="mb-3 font-display text-lg font-semibold text-foreground">{t('owner.recentBookings')}</h2>
         {recentBookings.length === 0 ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">No bookings yet — share your shop to get started!</p>
+          <p className="py-8 text-center text-sm text-muted-foreground">{t('owner.noBookingsYet')}</p>
         ) : (
           <div className="space-y-2">
             {recentBookings.map((b: any) => (

@@ -12,10 +12,12 @@ import { DURATION_OPTIONS } from '@/lib/constants';
 import { Plus, Pencil, Trash2, Clock, Wrench } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const OwnerServices = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [shopId, setShopId] = useState<string | null>(null);
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,18 +118,18 @@ const OwnerServices = () => {
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-foreground">Services</h1>
+          <h1 className="font-display text-2xl font-bold text-foreground">{t('owner.manageServices')}</h1>
           <p className="text-sm text-muted-foreground">{services.length} services</p>
         </div>
         <Button onClick={openAddSheet} className="rose-gradient text-primary-foreground">
-          <Plus className="mr-1 h-4 w-4" /> Add Service
+          <Plus className="mr-1 h-4 w-4" /> {t('owner.addService')}
         </Button>
       </div>
 
       {services.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-12 text-center">
           <Wrench className="mx-auto h-10 w-10 text-muted-foreground" />
-          <p className="mt-3 text-muted-foreground">No services yet. Add your first service to get started!</p>
+          <p className="mt-3 text-muted-foreground">{t('owner.noServicesYet')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -153,31 +155,31 @@ const OwnerServices = () => {
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetContent side="bottom" className="border-border bg-card">
-          <SheetHeader><SheetTitle className="text-foreground">{editingId ? 'Edit Service' : 'Add Service'}</SheetTitle></SheetHeader>
+          <SheetHeader><SheetTitle className="text-foreground">{editingId ? t('owner.editService') : t('owner.addService')}</SheetTitle></SheetHeader>
           <div className="mt-4 space-y-4">
             <div className="space-y-1.5">
-              <Label>Service Name *</Label>
+              <Label>{t('owner.serviceName')}</Label>
               <Input placeholder="e.g. Haircut" value={formName} onChange={(e) => setFormName(e.target.value)} />
               {formErrors.name && <p className="text-xs text-destructive">{formErrors.name}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label>Duration</Label>
+              <Label>{t('owner.duration')}</Label>
               <Select value={formDuration} onValueChange={setFormDuration}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>{DURATION_OPTIONS.map((d) => <SelectItem key={d} value={String(d)}>{d} min</SelectItem>)}</SelectContent>
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Price (KD) *</Label>
+              <Label>{t('owner.priceKD')}</Label>
               <Input type="number" step="0.001" min="0" placeholder="5.000" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} onBlur={() => { const n = parseFloat(formPrice); if (!isNaN(n)) setFormPrice(n.toFixed(3)); }} />
               {formErrors.price && <p className="text-xs text-destructive">{formErrors.price}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label>Description (optional)</Label>
+              <Label>{t('owner.description')}</Label>
               <Textarea placeholder="Brief description..." value={formDesc} onChange={(e) => setFormDesc(e.target.value)} className="resize-none" maxLength={200} />
             </div>
             <Button onClick={handleSave} disabled={saving} className="w-full rose-gradient text-primary-foreground">
-              {saving ? 'Saving...' : 'Save'}
+              {saving ? t('owner.saving') : t('common.save')}
             </Button>
           </div>
         </SheetContent>
@@ -186,8 +188,8 @@ const OwnerServices = () => {
       <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
         <AlertDialogContent className="border-border bg-card">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-foreground">Delete Service</AlertDialogTitle>
-            <AlertDialogDescription>This service will be deactivated and hidden from customers.</AlertDialogDescription>
+            <AlertDialogTitle className="text-foreground">{t('owner.deleteService')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('owner.deactivateWarning')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="border-border">Cancel</AlertDialogCancel>

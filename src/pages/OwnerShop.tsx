@@ -11,6 +11,7 @@ import { KUWAIT_AREAS, HOUR_OPTIONS } from '@/lib/constants';
 import { ImagePlus } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
 
@@ -26,6 +27,7 @@ const defaultHours = (): Record<string, DayHours> =>
 const OwnerShop = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [shopId, setShopId] = useState<string | null>(null);
@@ -96,7 +98,7 @@ const OwnerShop = () => {
       if (error) {
         toast({ title: 'Error', description: error.message, variant: 'destructive' });
       } else {
-        toast({ title: 'Shop saved!', description: 'Your shop details have been updated.' });
+        toast({ title: t('common.success'), description: t('owner.shopSaved') });
       }
     } else {
       const { data, error } = await supabase.from('shops').insert({ ...payload, owner_id: user.id }).select('id').single();
@@ -104,7 +106,7 @@ const OwnerShop = () => {
         toast({ title: 'Error', description: error.message, variant: 'destructive' });
       } else {
         setShopId(data.id);
-        toast({ title: 'Shop created!', description: 'Your salon is now set up.' });
+        toast({ title: t('common.success'), description: t('owner.shopCreated') });
       }
     }
     setSaving(false);
@@ -127,8 +129,8 @@ const OwnerShop = () => {
   return (
     <div className="animate-fade-in space-y-8">
       <div>
-        <h1 className="font-display text-2xl font-bold text-foreground">My Shop</h1>
-        <p className="text-sm text-muted-foreground">Set up and manage your salon details</p>
+        <h1 className="font-display text-2xl font-bold text-foreground">{t('owner.myShop')}</h1>
+        <p className="text-sm text-muted-foreground">{t('owner.myShopDesc')}</p>
       </div>
 
       {/* Shop Status */}
@@ -136,12 +138,12 @@ const OwnerShop = () => {
         <div>
           <h2 className="font-display text-base font-semibold text-foreground">Shop Status</h2>
           <p className="text-xs text-muted-foreground">
-            {isActive ? 'Your shop is visible to customers' : 'Your shop is hidden from customers'}
+            {isActive ? t('owner.activeStatus') : t('owner.inactiveStatus')}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span className={`text-xs font-medium ${isActive ? 'text-green-500' : 'text-muted-foreground'}`}>
-            {isActive ? 'Active' : 'Inactive'}
+            {isActive ? t('owner.active') : t('owner.inactive')}
           </span>
           <Switch checked={isActive} onCheckedChange={setIsActive} />
         </div>
@@ -151,17 +153,17 @@ const OwnerShop = () => {
       <section className="space-y-4 rounded-xl border border-border bg-card p-5">
         <h2 className="font-display text-base font-semibold text-foreground">Basic Information</h2>
         <div className="space-y-1.5">
-          <Label htmlFor="shopName">Shop Name *</Label>
+          <Label htmlFor="shopName">{t('owner.shopName')}</Label>
           <Input id="shopName" placeholder="e.g. Al-Nakheel Stylists" value={name} onChange={(e) => setName(e.target.value)} />
           {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="desc">Description</Label>
+          <Label htmlFor="desc">{t('owner.shopDescription')}</Label>
           <Textarea id="desc" placeholder="Tell customers about your shop..." maxLength={200} value={description} onChange={(e) => setDescription(e.target.value)} className="resize-none" />
           <p className="text-right text-xs text-muted-foreground">{description.length}/200</p>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="phone">Phone Number *</Label>
+          <Label htmlFor="phone">{t('owner.phoneNumber')}</Label>
           <div className="flex items-center gap-2">
             <span className="shrink-0 rounded-md border border-input bg-secondary px-3 py-2 text-sm text-foreground">+965</span>
             <Input id="phone" placeholder="55001234" value={phone} onChange={(e) => setPhone(e.target.value)} />
@@ -169,12 +171,12 @@ const OwnerShop = () => {
           {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="address">Address *</Label>
+          <Label htmlFor="address">{t('owner.address')}</Label>
           <Input id="address" placeholder="Block 5, Salem Al-Mubarak St" value={address} onChange={(e) => setAddress(e.target.value)} />
           {errors.address && <p className="text-xs text-destructive">{errors.address}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label>Area / District</Label>
+          <Label>{t('owner.areaDistrict')}</Label>
           <Select value={area} onValueChange={setArea}>
             <SelectTrigger><SelectValue placeholder="Select area" /></SelectTrigger>
             <SelectContent>
@@ -231,7 +233,7 @@ const OwnerShop = () => {
       </section>
 
       <Button onClick={handleSave} disabled={saving} className="w-full rose-gradient font-semibold text-primary-foreground">
-        {saving ? 'Saving...' : 'Save Shop'}
+        {saving ? t('owner.saving') : t('common.save')}
       </Button>
     </div>
   );

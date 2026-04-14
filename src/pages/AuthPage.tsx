@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -40,6 +40,7 @@ const maskEmail = (email: string) => {
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { session, profile, loading: authLoading, refreshProfile } = useAuth();
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -53,7 +54,7 @@ const AuthPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [awaitingPasswordSetup, setAwaitingPasswordSetup] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(searchParams.get('reason') === 'unverified' ? 'لم يتم تأكيد البريد الإلكتروني. يرجى التحقق من بريدك الإلكتروني.' : '');
   const [emailError, setEmailError] = useState('');
   const [resendTimer, setResendTimer] = useState(0);
   const [rememberMe, setRememberMe] = useState(true);
@@ -491,7 +492,7 @@ const AuthPage = () => {
             <div className="flex justify-center">
               <InputOTP maxLength={6} value={otp} onChange={setOtp}>
                 <InputOTPGroup>
-                  {Array.from({ length: 8 }, (_, i) => (
+                  {Array.from({ length: 6 }, (_, i) => (
                     <InputOTPSlot
                       key={i}
                       index={i}
@@ -544,6 +545,13 @@ const AuthPage = () => {
             {error}
           </p>
         )}
+
+        {/* Legal links */}
+        <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+          <a href="/privacy" className="hover:text-foreground">سياسة الخصوصية</a>
+          <span>·</span>
+          <a href="/terms" className="hover:text-foreground">الشروط والأحكام</a>
+        </div>
       </div>
     </div>
   );
